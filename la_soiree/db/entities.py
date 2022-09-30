@@ -23,6 +23,11 @@ class Segment(EntityBase):
     seek_time=Column(Integer)
     duration=Column(Integer)
 
+class MediaFile(EntityBase):
+    __tablename__ = "media"
+    id=Column(Integer, primary_key=True, autoincrement=True)
+    media_id=Column(String)
+    url=Column(String)
 
 def create_schema(engine):
     EntityBase.metadata.create_all(engine)
