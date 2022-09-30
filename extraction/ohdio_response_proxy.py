@@ -1,9 +1,11 @@
+import traceback
 from datetime import datetime
 from typing import Optional, List, NamedTuple
 
 import requests
 
 from extraction.dateparse import parse_fr_date
+from extraction.safe_dict import SafeDict
 
 
 class ProgrammeDescriptor(NamedTuple):
@@ -17,9 +19,11 @@ class ProgrammeDescriptor(NamedTuple):
 class EpisodeDescriptor(NamedTuple):
     title: str
     description: str
-    guid: str
+    episode_id: str
+    streams: List[str]
     date: datetime
     duration: int
+    fileSizeInBytes: int
 
 
 class OhdioApi(object):
@@ -52,12 +56,13 @@ class OhdioApi(object):
 
 class OhdioProgrammeResponseProxy(object):
 
-    def __init__(self, api: OhdioApi, show_id: str, reverse_episode_segments: bool = False):
+    def __init__(self, api: OhdioApi, show_id: str, reverse_episode_segments: bool = False, max_pages = None):
         self.reverse_episode_segments = reverse_episode_segments
         self.programme_id = show_id
         self._api = api
         self._episodes: Optional[List[EpisodeDescriptor]] = None
         self._programme: Optional[ProgrammeDescriptor] = None
+        self._max_pages: Optional[int] = max_pages
 
     @property
     def programme(self) -> ProgrammeDescriptor:
@@ -93,21 +98,25 @@ class OhdioProgrammeResponseProxy(object):
                     if self.reverse_episode_segments:
                         distinct_streams = distinct_streams[::-1]
 
-                    for stream_id in distinct_streams:
-                        res.append(self._map_episode(x, stream_id))
+                    res.append(self._map_episode(x, episode_id, distinct_streams))
                 current_page += 1
-            except Exception:
+                if self._max_pages and current_page > self._max_pages:
+                    break
+            except Exception as e:
+                traceback.print_exception(e)
                 break
 
         self._episodes = res
 
-    def _map_episode(self, json: dict, stream_id: str) -> Optional[EpisodeDescriptor]:
+    def _map_episode(self, json: dict, episode_id: str, distinct_streams: list) -> Optional[EpisodeDescriptor]:
         return EpisodeDescriptor(
             title=clean(json["title"]),
             description=clean(json["summary"]),
-            guid=stream_id,
+            episode_id=episode_id,
+            streams=distinct_streams,
             date=parse_fr_date(json["media2"]["details"]),
-            duration=json["media2"]["duration"]["durationInSeconds"])
+            duration=json["media2"]["duration"]["durationInSeconds"],
+            fileSizeInBytes=SafeDict(json)["download"]["fileSizeInBytes"].value() or 0)
 
     def _fetch_programme(self):
         json = self._api.query_programme(self.programme_id)

@@ -10,7 +10,7 @@ class EpisodeSegment(NamedTuple):
     title: Optional[str]
     subtitle: Optional[str]
     summary: Optional[str]
-    displayTime: str
+    display_time: str
     media_id: str
     seek_time: int
     duration: int
@@ -24,7 +24,7 @@ def query_segments(episode_id: int):
                 title=x["title"],
                 subtitle=x["subtitle"],
                 summary=x["summary"],
-                displayTime=x["index"]["value"],
+                display_time=x["index"]["value"],
                 media_id=x["media2"]["id"],
                 seek_time=x["media2"]["seekTime"],
                 duration=x["media2"]["duration"]["durationInSeconds"]
@@ -40,8 +40,11 @@ def query_media_url(media_id: str) -> str:
     return ""
 
 if __name__ == '__main__':
-    Stream(query_segments(611475))\
-        .forEach(print)
-
-    for episode in OhdioProgrammeResponseProxy(OhdioApi(), "la-soiree-est-encore-jeune").episodes:
+    # Stream(query_segments(611475))\
+    #     .forEach(print)
+    print(""""###### EPISODES ######""")
+    for episode in OhdioProgrammeResponseProxy(OhdioApi(), "la-soiree-est-encore-jeune", max_pages=2).episodes:
         print(episode.title, episode.guid)
+
+
+    print(""""###### SEGMENTS ######""")
