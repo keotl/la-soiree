@@ -1,5 +1,6 @@
 from typing import NamedTuple, Optional
 import requests
+
 from jivago.lang.stream import Stream
 
 from extraction.ohdio_response_proxy import OhdioApi, OhdioProgrammeResponseProxy
@@ -25,7 +26,7 @@ def query_segments(episode_id: int):
                 subtitle=x["subtitle"],
                 summary=x["summary"],
                 display_time=x["index"]["value"],
-                media_id=x["media2"]["id"],
+                media_id=x["playlistItemId"]["mediaId"],
                 seek_time=x["media2"]["seekTime"],
                 duration=x["media2"]["duration"]["durationInSeconds"]
             )) \

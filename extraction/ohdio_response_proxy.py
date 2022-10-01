@@ -92,7 +92,10 @@ class OhdioProgrammeResponseProxy(object):
                     distinct_streams = []
 
                     for segment in segments["content"]["contentDetail"]["items"]:
-                        stream_id = segment["media2"]["id"]
+                        stream_id = segment["playlistItemId"]["mediaId"]
+                        if stream_id == None:
+                            print("Error!! no playlistItemId.media_id")
+                        # stream_id = segment["media2"]["id"]
                         if stream_id not in distinct_streams:
                             distinct_streams.append(stream_id)
                     if self.reverse_episode_segments:

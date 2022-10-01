@@ -5,6 +5,13 @@ from typing import Tuple, List
 from jivago.lang.stream import Stream
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import text
+
+LOG_REQUESTS = True
+if LOG_REQUESTS:
+    import sys
+    from extraction.logging_requests import INSTANCE as logging_requests_instance
+    sys.modules["requests"] = logging_requests_instance
 
 from extraction.episode_segments import query_segments, query_media_url
 from extraction.ohdio_response_proxy import OhdioProgrammeResponseProxy, OhdioApi
@@ -25,7 +32,14 @@ def build_database():
             s.add_all(x[1])
             s.add_all(x[2])
         s.commit()
+        print("======Sanity checks======")
+        orphan_media_segment = text("SELECT count() FROM segments LEFT JOIN media ON segments.media_id=media.media_id WHERE media.media_id is NULL;")
+        segments_with_missing_media_id = next(s.execute(orphan_media_segment))[0]
+        print(f"Found {segments_with_missing_media_id} segments with a missing media URL.")
+
     print(f"Completed in {datetime.datetime.now() - start}.")
+
+
 
 
 def map_episode(episode) -> Tuple[Episode, List[Segment], List[MediaFile]]:
