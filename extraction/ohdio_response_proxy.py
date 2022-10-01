@@ -1,4 +1,5 @@
 import traceback
+import html
 from datetime import datetime
 from typing import Optional, List, NamedTuple
 
@@ -133,7 +134,4 @@ class OhdioProgrammeResponseProxy(object):
 
 
 def clean(human_readable_text: str) -> str:
-    return (human_readable_text or "") \
-        .replace("&nbsp;", " ") \
-        .replace("&", "&amp; ") \
-        .replace("<br>", "<br/>")
+    return html.unescape(human_readable_text or "")

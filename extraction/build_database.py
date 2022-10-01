@@ -33,6 +33,8 @@ def build_database():
             s.add_all(x[2])
         s.commit()
         print("======Sanity checks======")
+        n_episodes = next(s.execute(text("SELECT COUNT() FROM episodes;")))[0]
+        print(f"Saved {n_episodes} episodes.")
         orphan_media_segment = text("SELECT count() FROM segments LEFT JOIN media ON segments.media_id=media.media_id WHERE media.media_id is NULL;")
         segments_with_missing_media_id = next(s.execute(orphan_media_segment))[0]
         print(f"Found {segments_with_missing_media_id} segments with a missing media URL.")

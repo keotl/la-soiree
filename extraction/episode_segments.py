@@ -3,7 +3,7 @@ import requests
 
 from jivago.lang.stream import Stream
 
-from extraction.ohdio_response_proxy import OhdioApi, OhdioProgrammeResponseProxy
+from extraction.ohdio_response_proxy import OhdioApi, OhdioProgrammeResponseProxy, clean
 
 
 class EpisodeSegment(NamedTuple):
@@ -22,9 +22,9 @@ def query_segments(episode_id: int):
         return Stream(res.json()["content"]["contentDetail"]["items"]) \
             .map(lambda x: EpisodeSegment(
                 episode_id=episode_id,
-                title=x["title"],
-                subtitle=x["subtitle"],
-                summary=x["summary"],
+                title=clean(x["title"]),
+                subtitle=clean(x["subtitle"]),
+                summary=clean(x["summary"]),
                 display_time=x["index"]["value"],
                 media_id=x["playlistItemId"]["mediaId"],
                 seek_time=x["media2"]["seekTime"],
