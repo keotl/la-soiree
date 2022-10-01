@@ -22,9 +22,9 @@ def build_database():
     start = datetime.datetime.now()
     pool = multiprocessing.Pool(4)
     res = pool.map(map_episode,
-    OhdioProgrammeResponseProxy(OhdioApi(), "la-soiree-est-encore-jeune", max_pages=None).episodes)
+    reversed(OhdioProgrammeResponseProxy(OhdioApi(), "la-soiree-est-encore-jeune", max_pages=None).episodes))
 
-    engine = create_engine('sqlite:///db.db')
+    engine = create_engine('sqlite:///../db.db')
     create_schema(engine)
     with Session(engine) as s:
         for x in res:
@@ -64,7 +64,7 @@ def map_episode(episode) -> Tuple[Episode, List[Segment], List[MediaFile]]:
         media_urls.map(lambda id, url: MediaFile(media_id=id, url=url)).toList()
 
 if __name__ == '__main__':
-    if os.path.exists("db.db"):
-        os.remove("db.db")
+    if os.path.exists("../db.db"):
+        os.remove("../db.db")
         print("Removed old database db.db.")
     build_database()
