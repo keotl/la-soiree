@@ -1,0 +1,12 @@
+.rootBackground {
+    background-color: black;
+    user-select: none;
+}
+.container {
+    border-radius: 10px 10px 0 0;
+    background-color: white;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    /* padding-top: 4px; */
+    /* padding-bottom: 4px; */
+}

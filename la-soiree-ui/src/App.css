@@ -1,0 +1,8 @@
+#page-content {
+    height: 100vh;
+    overflow: hidden;
+}
+
+.title-bar {
+    user-select: none;
+}
