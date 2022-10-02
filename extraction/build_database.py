@@ -23,7 +23,7 @@ def build_database():
     pool = multiprocessing.Pool(4)
     res = pool.map(map_episode,
     reversed(OhdioProgrammeResponseProxy(OhdioApi(), "la-soiree-est-encore-jeune", max_pages=None).episodes))
-
+    res = remove_duplicates(res)
     engine = create_engine('sqlite:///../db.db')
     create_schema(engine)
     with Session(engine) as s:
@@ -41,7 +41,19 @@ def build_database():
 
     print(f"Completed in {datetime.datetime.now() - start}.")
 
+def remove_duplicates(res):
+    seen_media_ids = set()
+    new_res = []
+    for e,s,m in res:
+        new_m = []
+        for media in m:
+            if media.media_id in seen_media_ids:
+                continue
+            seen_media_ids.add(media.media_id)
+            new_m.append(media)
 
+        new_res.append((e,s,new_m))
+    return new_res
 
 
 def map_episode(episode) -> Tuple[Episode, List[Segment], List[MediaFile]]:

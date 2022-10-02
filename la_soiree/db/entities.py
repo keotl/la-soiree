@@ -25,8 +25,7 @@ class Segment(EntityBase):
 
 class MediaFile(EntityBase):
     __tablename__ = "media"
-    id=Column(Integer, primary_key=True, autoincrement=True)
-    media_id=Column(String)
+    media_id=Column(String, primary_key=True)
     url=Column(String)
 
 def create_schema(engine):

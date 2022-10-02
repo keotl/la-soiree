@@ -5,6 +5,7 @@ from jivago.lang.annotations import Serializable
 
 @Serializable
 class SegmentModel(NamedTuple):
+    id: int
     episode_id: int
     title: str
     subtitle: str

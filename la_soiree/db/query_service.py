@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from la_soiree.db.entities import Episode, MediaFile, Segment
 from la_soiree.db.models import SegmentModel
 
+
 @Component
 @Singleton
 class QueryService(object):
@@ -27,15 +28,16 @@ class QueryService(object):
 
         with Session(self._engine) as session:
             return Stream(session.execute(stmt)) \
-                .map(lambda s,m,e: SegmentModel(s.episode_id,
-                                                s.title,
-                                                s.subtitle,
-                                                s.summary,
-                                                s.display_time,
-                                                s.media_id,
-                                                m.url,
-                                                s.seek_time,
-                                                s.duration,
-                                                e.date,
-                                                e.title)) \
+                .map(lambda s, m, e: SegmentModel(s.id,
+                                                  s.episode_id,
+                                                  s.title,
+                                                  s.subtitle,
+                                                  s.summary,
+                                                  s.display_time,
+                                                  s.media_id,
+                                                  m.url,
+                                                  s.seek_time,
+                                                  s.duration,
+                                                  e.date,
+                                                  e.title)) \
                 .toList()
