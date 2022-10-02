@@ -9,3 +9,7 @@
     cursor: se-resize;
     user-select: none;
 }
+
+.onTop {
+    z-index: 100;
+}

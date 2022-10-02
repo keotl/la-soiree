@@ -1,0 +1,73 @@
+.button {
+  width: 60px;
+  /* height: 40px; */
+  min-height: 0;
+  min-width: 0;
+  /* height: 40px; */
+  font-size: 24pt;
+  padding: 0;
+  /* padding-bottom: 1px; */
+  margin-left: 1px;
+  margin-right: 1px;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  user-select: none;
+}
+
+.title {
+  min-height: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+.infoContainer {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  padding-left: 1rem;
+  user-select: none;
+}
+
+.durationText {
+  padding-left: 1rem;
+  padding-right: 2rem;
+}
+
+.marquee-section {
+  position: relative;
+  min-height: 2rem;
+  flex: 1;
+}
+
+.marquee-section,
+.marquee-section * {
+  overflow: hidden;
+}
+
+.marquee {
+  /* padding-left: 20px; */
+  /* padding-right: 20px; */
+  text-align: center;
+  white-space: nowrap;
+}
+
+.marquee-div {
+  position: absolute;
+  /* width: 100%; */
+  animation: move-left-to-right linear 20s infinite;
+}
+
+/* use this one to move from left to right direction */
+@keyframes move-left-to-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}

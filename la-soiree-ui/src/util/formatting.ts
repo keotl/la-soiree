@@ -31,3 +31,15 @@ export function formatDuration(seconds: number): string {
     minutes > 0 ? minutes + "m" : ""
   }${remaining}s`;
 }
+
+export function formatRemainingTime(end: number, current: number): string {
+  if (isNaN(end) || isNaN(current)) {
+    return "-0:00";
+  }
+  const remaining = end - current;
+  const minutes = Math.floor(remaining / 60);
+  return `-${minutes}:${String(Math.floor(remaining - 60 * minutes)).padStart(
+    2,
+    "0"
+  )}`;
+}

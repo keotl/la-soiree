@@ -10,6 +10,7 @@ type Props = {
   defaultLeft?: number;
   defaultTop?: number;
   onClose?: () => void;
+  resizable?: boolean;
 };
 
 export function BaseWindow(props: Props) {
@@ -63,7 +64,11 @@ export function BaseWindow(props: Props) {
 
   return (
     <div
-      className="window"
+      className={
+        activeWindow.activeWindow === props.title
+          ? "window " + styles.onTop
+          : "window"
+      }
       style={{ position: "absolute", width, height, left, top }}
       onMouseDown={() => activeWindow.setActiveWindow(props.title)}
     >
@@ -91,21 +96,25 @@ export function BaseWindow(props: Props) {
           />
         )}
         <h1 className="title">{props.title}</h1>
-        {/* <button aria-label="Resize" className="resize"></button>*/}
+        {activeWindow.activeWindow === props.title && (
+          <button aria-label="Resize" disabled className="hidden"></button>
+        )}
       </div>
 
       {props.children}
-      <div
-        className={styles.resizeClickZone}
-        onMouseDown={(e) => {
-          setIsResizing(true);
-          setDragStartPoint([e.clientX - width, e.clientY - height]);
-        }}
-        onMouseUp={() => {
-          setIsResizing(false);
-          setDragStartPoint(null);
-        }}
-      />
+      {!(props.resizable === false) && (
+        <div
+          className={styles.resizeClickZone}
+          onMouseDown={(e) => {
+            setIsResizing(true);
+            setDragStartPoint([e.clientX - width, e.clientY - height]);
+          }}
+          onMouseUp={() => {
+            setIsResizing(false);
+            setDragStartPoint(null);
+          }}
+        />
+      )}
     </div>
   );
 }

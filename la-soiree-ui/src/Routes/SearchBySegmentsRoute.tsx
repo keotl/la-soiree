@@ -1,22 +1,57 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { BaseWindow } from "../components/BaseWindow";
+import { PlaylistContext } from "../context/PlaylistContext";
 import { SearchResultsContext } from "../context/SearchResultsContext";
 import { formatDate, formatDuration } from "../util/formatting";
+import { segmentToPlayable } from "../util/toPlayable";
 import styles from "./SearchBySegmentsRoute.module.css";
 
 export function SearchBySegmentsRoute() {
   const [searchType, setSearchType] = useState<"segments" | "episodes">(
     "segments"
   );
-  const [query, setQuery] = useState("");
+  const [searchParams] = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get("q") || "");
   const context = useContext(SearchResultsContext);
+  const playlistContext = useContext(PlaylistContext);
+
   const totalDuration = useMemo(() => {
     return context.segments.map((x) => x.duration).reduce((a, e) => a + e, 0);
   }, [context.segments]);
 
+  function queueFromSegment(segmentId: number) {
+    const index = context.segments.findIndex((s) => s.id === segmentId);
+    playlistContext.setQueue(
+      context.segments.slice(index).map(segmentToPlayable)
+    );
+  }
+  useEffect(() => {
+    const query = searchParams.get("q");
+    if (query) {
+      context.searchSegmentsByText(query);
+    }
+  }, []);
+
+  function submit() {
+    var newurl =
+      window.location.protocol +
+      "//" +
+      window.location.host +
+      window.location.pathname +
+      "?q=" +
+      query;
+    window.history.pushState({ path: newurl }, "", newurl);
+    context.searchSegmentsByText(query);
+  }
+
   return (
-      <BaseWindow title="Recherche" defaultHeight={600} defaultWidth={800}
-	  >
+    <BaseWindow
+      title="Recherche"
+      defaultHeight={600}
+      defaultWidth={800}
+      defaultLeft={40}
+    >
       <div className="details-bar">
         <span>
           {" "}
@@ -37,7 +72,7 @@ export function SearchBySegmentsRoute() {
             onChange={(e) => setQuery(e.target.value as any)}
             onKeyUp={(e) => {
               if (e.key === "Enter") {
-                context.searchSegmentsByText(query);
+                submit();
               }
             }}
           />
@@ -69,10 +104,7 @@ export function SearchBySegmentsRoute() {
 
             <label htmlFor="radioEpisodes">Episodes</label>
           </div>
-          <button
-            className="btn"
-            onClick={() => context.searchSegmentsByText(query)}
-          >
+          <button className="btn" onClick={() => submit()}>
             Rechercher
           </button>
         </section>
@@ -82,13 +114,18 @@ export function SearchBySegmentsRoute() {
             <thead className={styles.tableHead}>
               <tr>
                 <th>Titre</th>
-                <th>Date</th>
-                <th>Durée</th>
+                <th style={{ width: "100px" }}>Date</th>
+                <th style={{ width: "80px" }}>Durée</th>
               </tr>
             </thead>
             <tbody>
               {context.segments.map((s) => (
-                <tr key={s.id}>
+                <tr
+                  key={s.id}
+                  onClick={() => {
+                    queueFromSegment(s.id);
+                  }}
+                >
                   <td>{s.title}</td>
                   <td style={{ textAlign: "end" }}>
                     {formatDate(s.aired_date)}

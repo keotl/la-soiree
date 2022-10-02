@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { ActiveWindowContextProvider } from "./ActiveWindowContext";
+import { PlaylistContextProvider } from "./PlaylistContext";
 import { SearchResultsContextProvider } from "./SearchResultsContext";
 
 type Props = {
@@ -10,7 +11,7 @@ export function Providers(props: Props) {
   return (
     <ActiveWindowContextProvider>
       <SearchResultsContextProvider>
-        {props.children}
+        <PlaylistContextProvider>{props.children}</PlaylistContextProvider>
       </SearchResultsContextProvider>
     </ActiveWindowContextProvider>
   );
