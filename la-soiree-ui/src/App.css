@@ -6,3 +6,6 @@
 .title-bar {
     user-select: none;
 }
+html {
+    overflow: hidden;
+}

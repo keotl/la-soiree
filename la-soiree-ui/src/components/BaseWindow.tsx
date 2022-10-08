@@ -25,19 +25,19 @@ export function BaseWindow(props: Props) {
   const activeWindow = useContext(ActiveWindowContext);
 
   useEffect(() => {
-    document.getElementById("page-content")!.onmousemove = onMouseMove;
+    document.getElementById("page-content")!.onpointermove = onMouseMove;
     if (isResizing) {
-      document.getElementById("page-content")!.onmouseup = () => {
+      document.getElementById("page-content")!.onpointerup = () => {
         setIsResizing(false);
         setDragStartPoint(null);
       };
       return () => {
-        document.getElementById("page-content")!.onmousemove = null;
-        document.getElementById("page-content")!.onmouseup = null;
+        document.getElementById("page-content")!.onpointermove = null;
+        document.getElementById("page-content")!.onpointerup = null;
       };
     }
     return () => {
-      document.getElementById("page-content")!.onmousemove = null;
+      document.getElementById("page-content")!.onpointermove = null;
     };
   }, [
     dragStartPoint,
@@ -70,7 +70,7 @@ export function BaseWindow(props: Props) {
           : "window"
       }
       style={{ position: "absolute", width, height, left, top }}
-      onMouseDown={() => activeWindow.setActiveWindow(props.title)}
+      onPointerDown={() => activeWindow.setActiveWindow(props.title)}
     >
       <div
         className={
@@ -79,11 +79,11 @@ export function BaseWindow(props: Props) {
             : "inactive-title-bar"
         }
         style={{ cursor: "pointer" }}
-        onMouseDown={(e) => {
+        onPointerDown={(e) => {
           setIsDragging(true);
           setDragStartPoint([e.clientX - left, e.clientY - top]);
         }}
-        onMouseUp={() => {
+        onPointerUp={() => {
           setIsDragging(false);
           setDragStartPoint(null);
         }}
@@ -105,11 +105,11 @@ export function BaseWindow(props: Props) {
       {!(props.resizable === false) && (
         <div
           className={styles.resizeClickZone}
-          onMouseDown={(e) => {
+          onPointerDown={(e) => {
             setIsResizing(true);
             setDragStartPoint([e.clientX - width, e.clientY - height]);
           }}
-          onMouseUp={() => {
+          onPointerUp={() => {
             setIsResizing(false);
             setDragStartPoint(null);
           }}
