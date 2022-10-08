@@ -1,6 +1,9 @@
+import { useContext } from "react";
+import { ActiveWindowContext } from "../context/ActiveWindowContext";
 import styles from "./HeaderBar.module.css";
 
 export function HeaderBar() {
+  const windowContext = useContext(ActiveWindowContext);
   return (
     <div className={styles.rootBackground}>
       <div className={styles.container}>
@@ -9,28 +12,28 @@ export function HeaderBar() {
             Chroniques
             <ul role="menu">
               <li role="menu-item">
-                <a href="#menu">Action</a>
-              </li>
-              <li role="menu-item">
-                <a href="#menu">Another Action</a>
+                <a onClick={() => windowContext.setActiveWindow("Explorateur")}>
+                  Explorateur
+                </a>
               </li>
             </ul>
           </li>
           <li role="menu-item" tabIndex={0} aria-haspopup="true">
             Recherche
             <ul role="menu">
-              <li role="menu-item">
+              {/*<li role="menu-item">
                 <a href="#menu">Épisodes</a>
-              </li>
+		</li>*/}
               <li role="menu-item">
                 <a href="/recherche/segments">Segments</a>
               </li>
-              <li role="menu-item">
+
+              {/*<li role="menu-item">
                 <a href="#menu">Occurrences</a>
-              </li>
+		</li>*/}
             </ul>
           </li>
-          <li role="menu-item" tabIndex={0} aria-haspopup="true">
+          {/*<li role="menu-item" tabIndex={0} aria-haspopup="true">
             Aide
             <ul role="menu">
               <li role="menu-item" className="divider">
@@ -40,7 +43,7 @@ export function HeaderBar() {
                 <a href="#menu">À propos</a>
               </li>
             </ul>
-          </li>
+            </li>*/}
         </ul>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
+import { Explorer } from "./components/Explorer";
 import { HeaderBar } from "./components/HeaderBar";
 import { Player } from "./components/Player";
 import { Providers } from "./context/Providers";
@@ -12,7 +13,8 @@ function App() {
         <BrowserRouter>
           <div id="page-content">
             <HeaderBar />
-            <Player />
+          <Player />
+	  <Explorer />
             <Routes>
               <Route
                 path="recherche/segments"

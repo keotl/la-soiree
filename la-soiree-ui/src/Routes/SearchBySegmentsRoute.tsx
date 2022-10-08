@@ -1,20 +1,24 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 import { BaseWindow } from "../components/BaseWindow";
+import { ActiveWindowContext } from "../context/ActiveWindowContext";
 import { PlaylistContext } from "../context/PlaylistContext";
+import { SearchQueryContext } from "../context/SearchQueryContext";
 import { SearchResultsContext } from "../context/SearchResultsContext";
 import { formatDate, formatDuration } from "../util/formatting";
 import { segmentToPlayable } from "../util/toPlayable";
 import styles from "./SearchBySegmentsRoute.module.css";
 
 export function SearchBySegmentsRoute() {
+  const activeWindow = useContext(ActiveWindowContext);
   const [searchType, setSearchType] = useState<"segments" | "episodes">(
     "segments"
   );
-  const [searchParams] = useSearchParams();
-  const [query, setQuery] = useState(searchParams.get("q") || "");
+  const { query, setQuery } = useContext(SearchQueryContext);
   const context = useContext(SearchResultsContext);
   const playlistContext = useContext(PlaylistContext);
+  const navigate = useNavigate();
 
   const totalDuration = useMemo(() => {
     return context.segments.map((x) => x.duration).reduce((a, e) => a + e, 0);
@@ -27,10 +31,10 @@ export function SearchBySegmentsRoute() {
     );
   }
   useEffect(() => {
-    const query = searchParams.get("q");
     if (query) {
       context.searchSegmentsByText(query);
     }
+    activeWindow.setActiveWindow("Recherche");
   }, []);
 
   function submit() {
@@ -51,6 +55,7 @@ export function SearchBySegmentsRoute() {
       defaultHeight={600}
       defaultWidth={800}
       defaultLeft={40}
+      onClose={() => navigate("/")}
     >
       <div className="details-bar">
         <span>
@@ -124,6 +129,7 @@ export function SearchBySegmentsRoute() {
                   key={s.id}
                   onClick={() => {
                     queueFromSegment(s.id);
+                    activeWindow.setActiveWindow("Player");
                   }}
                 >
                   <td>{s.title}</td>
@@ -141,10 +147,4 @@ export function SearchBySegmentsRoute() {
       </div>
     </BaseWindow>
   );
-}
-
-type RowProps = {};
-
-export function ResultRow(props: RowProps) {
-  return <div></div>;
 }
