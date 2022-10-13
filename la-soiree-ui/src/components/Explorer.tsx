@@ -51,7 +51,7 @@ const PREDEFINED_QUERIES: PredefinedQuery[] = [
   },
   {
     title: "Internetoscope",
-    icon: "world",
+    icon: "newspaper",
     query: "internetoscope",
   },
   {

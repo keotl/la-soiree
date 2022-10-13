@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { Link } from "react-router-dom";
 import { ActiveWindowContext } from "../context/ActiveWindowContext";
 import styles from "./HeaderBar.module.css";
 
@@ -25,7 +26,7 @@ export function HeaderBar() {
                 <a href="#menu">Épisodes</a>
 		</li>*/}
               <li role="menu-item">
-                <a href="/recherche/segments">Segments</a>
+                <Link to="/recherche/segments">Segments</Link>
               </li>
 
               {/*<li role="menu-item">
