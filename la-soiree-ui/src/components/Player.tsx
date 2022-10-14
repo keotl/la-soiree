@@ -38,6 +38,9 @@ export function Player() {
         audioElement.current.src = context.queue[0].url;
         audioElement.current.play();
       }
+    } else {
+      audioElement.current.pause();
+      hls.current.destroy();
     }
   }, [audioElement, context.queue]);
 
@@ -74,7 +77,7 @@ export function Player() {
           defaultWidth={200}
           defaultHeight={125}
           onClose={() => context.clear()}
-	  resizable={false}
+          resizable={false}
         >
           <div className={styles.infoContainer}>
             <div className={styles["marquee-section"]}>

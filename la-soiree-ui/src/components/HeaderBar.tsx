@@ -34,25 +34,21 @@ export function HeaderBar() {
 		</li>*/}
             </ul>
           </li>
-          {/*<li role="menu-item" tabIndex={0} aria-haspopup="true">
+          <li role="menu-item" tabIndex={0} aria-haspopup="true">
             Aide
             <ul role="menu">
-              <li role="menu-item" className="divider">
+              {/*<li role="menu-item" className="divider">
                 <a href="#menu">Manuel d'utilisation</a>
-              </li>
+		</li>*/}
               <li role="menu-item">
-                <a href="#menu">À propos</a>
+                <a onClick={() => windowContext.setActiveWindow("about")}>
+                  À propos
+                </a>
               </li>
             </ul>
-            </li>*/}
+          </li>
         </ul>
       </div>
     </div>
   );
-}
-
-type Props = {};
-
-export function HeaderBarButton(props: Props) {
-  return <></>;
 }
