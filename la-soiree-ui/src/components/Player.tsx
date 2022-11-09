@@ -105,7 +105,7 @@ export function Player() {
                 context.setQueue(context.queue);
               }}
             >
-              ⏮
+              <span className="material-symbols-outlined">skip_previous</span>
             </button>
             <button
               className={"btn " + styles.button}
@@ -116,7 +116,7 @@ export function Player() {
                 }
               }}
             >
-              ⟲
+              <span className="material-symbols-outlined">replay_10</span>
             </button>
             <button
               className={"btn " + styles.button}
@@ -128,7 +128,11 @@ export function Player() {
                 }
               }}
             >
-              {audioElement.current && audioElement.current.paused ? "⏵" : "⏸"}
+              {audioElement.current && audioElement.current.paused ? (
+                <span className="material-symbols-outlined">play_arrow</span>
+              ) : (
+                <span className="material-symbols-outlined">pause</span>
+              )}
             </button>
             <button
               className={"btn " + styles.button}
@@ -139,13 +143,13 @@ export function Player() {
                 }
               }}
             >
-              ⟳
+              <span className="material-symbols-outlined">forward_10</span>
             </button>
             <button
               className={"btn " + styles.button}
               onClick={() => context.advance()}
             >
-              ⏭
+              <span className="material-symbols-outlined">skip_next</span>
             </button>
           </div>
         </BaseWindow>
